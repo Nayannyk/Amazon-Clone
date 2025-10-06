@@ -1,0 +1,258 @@
+<!--
+Simple educational replica of an e-commerce homepage (for learning only).
+NOT affiliated with Amazon. Do not use for commercial or deceptive purposes.
+Save this file as `index.html` and open in your browser.
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ShopEasy — Replica Demo</title>
+  <style>
+    /* Basic reset */
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial}
+    body{background:#f3f4f6;color:#111}
+
+    /* Header */
+    .topbar{background:#131921;color:#fff;padding:12px 18px;display:flex;align-items:center;gap:16px}
+    .brand{font-weight:700;font-size:22px;letter-spacing:1px}
+    .search{flex:1;display:flex}
+    .search input{width:100%;padding:10px;border-radius:4px 0 0 4px;border:none}
+    .search button{padding:10px 14px;border:none;background:#febd69;border-radius:0 4px 4px 0;cursor:pointer}
+    .actions{display:flex;gap:12px;align-items:center}
+    .actions button{background:transparent;border:1px solid rgba(255,255,255,0.12);color:#fff;padding:8px 10px;border-radius:4px;cursor:pointer}
+
+    /* Nav */
+    nav{background:#232f3e;color:#fff;padding:8px 18px;font-size:14px}
+    nav a{color:#fff;margin-right:12px;text-decoration:none}
+
+    /* Hero */
+    .hero{padding:24px 18px;display:flex;gap:18px;align-items:center}
+    .hero-left{flex:1}
+    .hero-card{background:linear-gradient(90deg,#fff 60%, #f8fafc 40%);padding:18px;border-radius:8px;box-shadow:0 6px 18px rgba(16,24,40,0.06)}
+    .carousel{height:180px;background:url('https://via.placeholder.com/900x180?text=Hero+Banner') center/cover;border-radius:6px}
+
+    /* Grid */
+    .container{max-width:1200px;margin:18px auto;padding:0 18px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .card{background:#fff;padding:12px;border-radius:8px;box-shadow:0 4px 14px rgba(16,24,40,0.04);display:flex;flex-direction:column}
+    .card img{width:100%;height:220px;object-fit:contain;background:#fafafa;border-radius:6px}
+    .card .title{font-size:15px;margin-top:10px;min-height:40px}
+    .price{font-weight:700;margin-top:auto;margin-bottom:8px}
+    .stars{color:#b69f2b;font-size:13px}
+    .btn-row{display:flex;gap:8px}
+    .btn{flex:1;padding:10px;border-radius:6px;border:none;cursor:pointer}
+    .btn.add{background:#ffd814}
+    .btn.details{background:#e7e7e7}
+
+    /* Footer */
+    footer{background:#fff;padding:18px;margin-top:24px;border-top:1px solid #e6e6e6}
+
+    @media (max-width:640px){.hero{flex-direction:column}.search input{font-size:14px}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div class="brand">ShopEasy</div>
+      <div class="search" role="search">
+        <input id="q" placeholder="Search for products, brands and more" aria-label="Search input">
+        <button id="searchBtn">Search</button>
+      </div>
+      <div class="actions">
+        <button id="signinBtn">Sign In</button>
+        <button id="cartBtn">Cart (<span id="cartCount">0</span>)</button>
+      </div>
+    </div>
+    <nav>
+      <a href="#">All</a>
+      <a href="#">Today's Deals</a>
+      <a href="#">Customer Service</a>
+      <a href="#">Gift Cards</a>
+      <a href="#">Registry</a>
+      <a href="#">Sell</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero container">
+      <div class="hero-left">
+        <div class="hero-card">
+          <a href="https://www.amazon.in/events/greatindianfestival/?_encoding=UTF8&pd_rd_w=dCzRP&content-id=amzn1.sym.d2f101ee-cce6-4feb-b118-a5da17410987&pf_rd_p=d2f101ee-cce6-4feb-b118-a5da17410987&pf_rd_r=4GX1TSZ8CFVNZ3HRTY44&pd_rd_wg=jrkl3&pd_rd_r=d938f2c4-e57a-455a-99f9-69e4c84c808e&ref_=pd_hp_d_hero_unk&bubble-id=discounts-collection-for-you" 
+            target="_blank" rel="noopener noreferrer">
+          <div class="carousel" role="img" aria-label="Promotional banner"
+            style="background: url('Background.jpg') center/cover no-repeat; border-radius: 6px; height: 180px;">
+          </div></a>
+
+
+        </div>
+      </div>
+      <aside style="width:320px">
+        <div class="hero-card">
+          <h3>Sign in for the best experience</h3>
+          <p>See personalised recommendations, track orders, and more.</p>
+          <button style="margin-top:10px;padding:10px;border-radius:6px;background:#ffd814;border:none;cursor:pointer">Sign in</button>
+        </div>
+      </aside>
+    </section>
+
+    <section class="container">
+      <h2 style="margin:6px 0 12px 0">Featured products</h2>
+      <div class="grid" id="productGrid">
+        <!-- Product cards will be injected by script -->
+      </div>
+    </section>
+
+    <section class="container" style="margin-top:18px">
+      <h3>Shop by category</h3>
+      <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
+        <div style="background:#fff;padding:12px;border-radius:8px;min-width:140px;text-align:center;box-shadow:0 4px 12px rgba(16,24,40,0.04)">Electronics</div>
+        <div style="background:#fff;padding:12px;border-radius:8px;min-width:140px;text-align:center;box-shadow:0 4px 12px rgba(16,24,40,0.04)">Home</div>
+        <div style="background:#fff;padding:12px;border-radius:8px;min-width:140px;text-align:center;box-shadow:0 4px 12px rgba(16,24,40,0.04)">Beauty</div>
+        <div style="background:#fff;padding:12px;border-radius:8px;min-width:140px;text-align:center;box-shadow:0 4px 12px rgba(16,24,40,0.04)">Toys</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap">
+        <div>
+          <h4>Get to know us</h4>
+          <p style="max-width:360px">This is a demo site created for learning front-end layout and UI. It is not a real store.</p>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <p>support@shopeasy.example</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <template id="cardT">
+    <div class="card">
+      <img src="" alt="">
+      <div class="title"></div>
+      <div class="stars">★★★★★ <span style="color:#6b7280;font-weight:600;font-size:12px">(123)</span></div>
+      <div class="price"></div>
+      <div class="btn-row">
+        <button class="btn add">Add to cart</button>
+        <button class="btn details">Details</button>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    // Sample product data (static)
+    const products = [
+  {
+    id: 1,
+    name: 'Wireless Bluetooth Headphones',
+    price: '₹2,299',
+    img: 'Bluetooth Headphone.jpg',
+    url: 'https://www.amazon.in/JBL-Wireless-Headphones-Bluetooth-Assistant/dp/B08QTYYNDN/ref=sr_1_4?crid=1DAXJUF7AJM2B&dib=eyJ2IjoiMSJ9.UtosWhMnDoYSTLfBE3aCfbC-qXyMWfdkyg4NtOn02MEotxH4zbFeI72yzdpt2A4nE3XXf7Mcjubicv5EaPlqhP8szo2drripjAWAzvK8p3jo9g1kZjXubshjMtkw2iZVy9ya0HI4qNVfUYbaL2Cvnmn_DRgZD8GthTWXjU4kU_eOU-ciIxBp8VYu-xZlm5ZQwVDIi_rydL7peUhsFvyehcCCYv0N7wScL9sKxHapgvrx1hjRVq7j1f_JsRyqfxXoWtpdKXzBbjvRYDYqV7cj7qhySgllSyN9m7FxYCuwLAQ.QqdZY8aqMEub8RnXUstDIkXxjMo33gcHlnxU0gLF0m0&dib_tag=se&keywords=wireless%2Bbluetooth%2Bheadphone&qid=1759735912&s=electronics&sprefix=wireless%2Bbluetuth%2Bheadphon%2Celectronics%2C240&sr=1-4&th=1'
+  },
+  {
+    id: 2,
+    name: 'Smart Watch with Health Tracking',
+    price: '₹1,899',
+    img: 'Smart Watch.webp',
+    url: 'https://www.amazon.in/Redmi-Display-Bluetooth-Advanced-Cancellation/dp/B0DCZWZ39H?source=ps-sl-shoppingads-lpcontext&ref_=fplfs&psc=1&smid=AJ6SIZC8YQDZX'
+  },
+  {
+    id: 3,
+    name: 'Portable Speaker (Waterproof)',
+    price: '₹1,399',
+    img: 'Speaker.webp',
+    url: 'https://www.amazon.in/boAt-Bluetooth-Resistance-Playtime-Multi-Compatibility/dp/B0BYZ26QGB?source=ps-sl-shoppingads-lpcontext&ref_=fplfs&smid=AJ6SIZC8YQDZX&th=1'
+  },
+  {
+    id: 4,
+    name: 'Instant Coffee (200g)',
+    price: '₹780',
+    img: 'Coffee.webp',
+    url: 'https://www.amazon.in/Nescafe-Classic-Stabilo-200g-pouch/dp/B01C5IX1AU?source=ps-sl-shoppingads-lpcontext&ref_=fplfs&psc=1&smid=A1DGXGBVM9T1I'
+  },
+  {
+    id: 5,
+    name: 'Noise Cancelling Earbuds',
+    price: '₹1,599',
+    img: 'Earbuds.webp',
+    url: 'amazon.in/realme-Wireless-Earbuds-Dynamic-Playback/dp/B0FKTN7TR8?source=ps-sl-shoppingads-lpcontext&ref_=fplfs&psc=1&smid=A1WYWER0W24N8S'
+  },
+  {
+    id: 6,
+    name: 'Fitness Band',
+    price: '₹4,999',
+    img: 'fitness band.jpg',
+    url: 'https://www.amazon.in/StyleOxx-Wristband-Wearable-Continuous-Monitoring/dp/B0F7R17XPV'
+  },
+  {
+    id: 7,
+    name: 'Gaming Mouse',
+    price: '₹299',
+    img: 'Mouse.webp',
+    url: 'https://www.amazon.in/Zebronics-Zeb-Transformer-M-Optical-Gaming-Effect/dp/B0819HZPXL?source=ps-sl-shoppingads-lpcontext&ref_=fplfs&smid=AJ6SIZC8YQDZX&th=1'
+  },
+  {
+    id: 8,
+    name: 'LED Desk Lamp',
+    price: '₹398',
+    img: 'Desklamp.webp',
+    url: 'https://www.amazon.in/Crompton-Deskmate-Rechargable-Adjustable-Technology/dp/B0DK1F45V6?source=ps-sl-shoppingads-lpcontext&ref_=fplfs&psc=1&smid=A2AL6IVND0I91F'
+  }
+];
+
+
+    const grid = document.getElementById('productGrid');
+    const tpl = document.getElementById('cardT');
+    const cartCount = document.getElementById('cartCount');
+    let cart = 0;
+
+    function renderProducts(list) {
+  grid.innerHTML = '';
+  list.forEach(p => {
+    const node = tpl.content.cloneNode(true);
+    const img = node.querySelector('img');
+    img.src = p.img;
+    img.alt = p.name;
+    img.style.cursor = 'pointer';
+    img.addEventListener('click', () => {
+      window.open(p.url, '_blank');
+    });
+
+    node.querySelector('.title').textContent = p.name;
+    node.querySelector('.price').textContent = p.price;
+    node.querySelector('.add').addEventListener('click', () => {
+      cart++;
+      cartCount.textContent = cart;
+    });
+    node.querySelector('.details').addEventListener('click', () => {
+      window.open(p.url, '_blank');
+    });
+
+    grid.appendChild(node);
+  });
+}
+
+
+    renderProducts(products);
+
+    // Search (simple client-side filter)
+    document.getElementById('searchBtn').addEventListener('click',()=>{
+      const q = document.getElementById('q').value.trim().toLowerCase();
+      if(!q){renderProducts(products);return}
+      const filtered = products.filter(p=>p.name.toLowerCase().includes(q));
+      renderProducts(filtered);
+    });
+
+    // Keyboard: enter to search
+    document.getElementById('q').addEventListener('keydown',(e)=>{if(e.key==='Enter')document.getElementById('searchBtn').click()});
+
+    // Simple responsive accessibility
+    document.querySelectorAll('.btn').forEach(b=>b.setAttribute('role','button'));
+  </script>
+</body>
+</html>
