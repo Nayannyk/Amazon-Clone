@@ -60,31 +60,27 @@ echo "=== Loading image into Kind cluster ==="
 kind load docker-image amazon-clone:latest --name "$CLUSTER_NAME"
 
 echo "=== Installing Nginx Ingress Controller for Kind ==="
-curl -sL https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.1/deploy/static/provider/cloud/deploy.yaml \
-  | sed 's|image: registry.k8s.io/ingress-nginx/controller:.*|image: registry.k8s.io/ingress-nginx/controller:v1.12.1|' \
-  > /tmp/ingress-nginx-deploy.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.1/deploy/static/provider/cloud/deploy.yaml
 
-cat >> /tmp/ingress-nginx-deploy.yaml <<'PATCH'
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: ingress-nginx-controller
-  namespace: ingress-nginx
-spec:
-  template:
-    spec:
-      nodeSelector:
-        ingress-ready: "true"
-      tolerations:
-        - key: node-role.kubernetes.io/control-plane
-          effect: NoSchedule
-        - key: node-role.kubernetes.io/master
-          effect: NoSchedule
-PATCH
+echo "=== Waiting for Ingress Controller to start ==="
+sleep 10
 
-kubectl apply -f /tmp/ingress-nginx-deploy.yaml
-rm -f /tmp/ingress-nginx-deploy.yaml
+echo "=== Patching Ingress Controller for Kind ==="
+kubectl patch deployment ingress-nginx-controller -n ingress-nginx --type=merge -p '{
+  "spec": {
+    "template": {
+      "spec": {
+        "nodeSelector": {
+          "ingress-ready": "true"
+        },
+        "tolerations": [
+          {"key": "node-role.kubernetes.io/control-plane", "effect": "NoSchedule"},
+          {"key": "node-role.kubernetes.io/master", "effect": "NoSchedule"}
+        ]
+      }
+    }
+  }
+}'
 
 echo "=== Waiting for Ingress Controller pod to be ready on control-plane ==="
 sleep 15
