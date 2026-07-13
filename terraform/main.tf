@@ -178,6 +178,6 @@ resource "null_resource" "download_kubeconfig" {
   depends_on = [aws_instance.main, local_file.private_key]
 
   provisioner "local-exec" {
-    command = "scp -o StrictHostKeyChecking=no -i ${path.module}/generated-key.pem ubuntu@${aws_instance.main.public_ip}:/home/ubuntu/.kube/config ${path.module}/kubeconfig"
+    command = "scp -o StrictHostKeyChecking=no -o ConnectTimeout=10 -o BatchMode=yes -i ${path.module}/generated-key.pem ubuntu@${aws_instance.main.public_ip}:/home/ubuntu/.kube/config ${path.module}/kubeconfig || echo 'Warning: kubeconfig not available yet. Run setup manually if needed.'"
   }
 }
