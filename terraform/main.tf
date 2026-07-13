@@ -145,6 +145,12 @@ resource "aws_instance" "main" {
     port        = var.ssh_port
   }
 
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir -p /home/ubuntu/${var.project_name}"
+    ]
+  }
+
   provisioner "file" {
     source      = "${path.root}/../"
     destination = "/home/ubuntu/${var.project_name}"
