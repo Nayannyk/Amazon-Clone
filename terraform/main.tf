@@ -175,15 +175,3 @@ resource "null_resource" "download_kubeconfig" {
     command = "scp -o StrictHostKeyChecking=no -i ${path.module}/generated-key.pem ubuntu@${aws_instance.main.public_ip}:/home/ubuntu/.kube/config ${path.module}/kubeconfig"
   }
 }
-
-resource "github_actions_secret" "ec2_host" {
-  repository  = var.github_repo
-  secret_name = "EC2_HOST"
-  plaintext_value = aws_instance.main.public_ip
-}
-
-resource "github_actions_secret" "ec2_ssh_key" {
-  repository  = var.github_repo
-  secret_name = "EC2_SSH_KEY"
-  plaintext_value = tls_private_key.deployer.private_key_pem
-}

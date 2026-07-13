@@ -18,10 +18,6 @@ terraform {
       source  = "hashicorp/local"
       version = "~> 2.0"
     }
-    github = {
-      source  = "integrations/github"
-      version = "~> 6.0"
-    }
   }
 }
 
@@ -35,8 +31,4 @@ provider "aws" {
       ManagedBy   = "terraform"
     }
   }
-}
-
-provider "github" {
-  token = var.github_token
 }

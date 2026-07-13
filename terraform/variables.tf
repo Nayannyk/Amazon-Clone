@@ -69,14 +69,3 @@ variable "app_replicas" {
   type        = number
   default     = 2
 }
-
-variable "github_token" {
-  description = "GitHub personal access token with repo scope"
-  type        = string
-  sensitive   = true
-}
-
-variable "github_repo" {
-  description = "GitHub repository (owner/repo format)"
-  type        = string
-}

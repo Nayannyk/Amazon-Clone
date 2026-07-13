@@ -43,11 +43,7 @@ jobs:
 
       - name: Terraform Plan
         run: |
-          terraform plan \
-            -var="github_token=${{ secrets.GITHUB_TOKEN_PAT }}" \
-            -var="github_repo=${{ github.repository }}" \
-            -var="dockerhub_username=${{ secrets.DOCKERHUB_USERNAME }}" \
-            -out=tfplan
+          terraform plan -out=tfplan
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
