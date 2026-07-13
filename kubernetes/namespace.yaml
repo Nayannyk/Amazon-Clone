@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: amazon-clone
+  labels:
+    app.kubernetes.io/name: amazon-clone
+    app.kubernetes.io/part-of: shopeasy

@@ -1,0 +1,11 @@
+# Copy this file to terraform.tfvars and fill in values
+# terraform.tfvars is gitignored
+
+# AWS
+aws_region      = "ap-south-1"
+instance_type   = "t2.medium"
+volume_size     = 20
+
+# GitHub (create token at https://github.com/settings/tokens with 'repo' scope)
+github_token    = "ghp_xxxxxxxxxxxxxxxxxxxx"
+github_repo     = "your-username/your-repo-name"

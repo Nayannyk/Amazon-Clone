@@ -1,0 +1,20 @@
+# Terraform
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/generated-key.pem
+terraform/kubeconfig
+terraform/*.tfvars
+terraform/.terraform.tfstate.lock.info
+
+# Docker
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

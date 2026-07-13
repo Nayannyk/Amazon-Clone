@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopeasy
+  namespace: amazon-clone
+  labels:
+    app: shopeasy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: shopeasy
+  template:
+    metadata:
+      labels:
+        app: shopeasy
+    spec:
+      containers:
+        - name: shopeasy
+          image: ${DOCKERHUB_USERNAME}/amazon-clone:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 5
