@@ -26,13 +26,39 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Verify AWS credentials
+        run: |
+          echo "=== Verifying AWS credentials ==="
+          sts=$(aws sts get-caller-identity)
+          echo "$sts"
+          ACCOUNT=$(echo $sts | jq -r '.Account')
+          if [ -z "$ACCOUNT" ]; then
+            echo "ERROR: AWS credentials are invalid!"
+            exit 1
+          fi
+          echo "AWS Account: $ACCOUNT - Credentials OK"
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
         run: terraform init
 
+      - name: Terraform Plan Destroy
+        run: terraform destroy -plan=tfdestroy
+
       - name: Terraform Destroy
+        run: terraform destroy -auto-approve
+
+      - name: Verify cleanup
         run: |
-          terraform destroy -auto-approve \
-            -var="aws_region=${{ secrets.AWS_REGION }}"
+          echo "=== Verifying resources are destroyed ==="
+          VPCS=$(aws ec2 describe-vpcs --filters "Name=tag:Project,Values=amazon-clone" --query 'Vpcs[].VpcId' --output text --region ${{ secrets.AWS_REGION }})
+          INSTANCES=$(aws ec2 describe-instances --filters "Name=tag:Project,Values=amazon-clone" "Name=instance-state-name,Values=running,pending" --query 'Reservations[].Instances[].InstanceId' --output text --region ${{ secrets.AWS_REGION }})
+          if [ -z "$VPCS" ] && [ -z "$INSTANCES" ]; then
+            echo "All resources destroyed successfully"
+          else
+            echo "WARNING: Some resources may still exist:"
+            echo "VPCs: $VPCS"
+            echo "Instances: $INSTANCES"
+          fi
