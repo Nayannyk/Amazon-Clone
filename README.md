@@ -6,18 +6,18 @@ A static e-commerce website deployed on Kubernetes using Terraform, Kind, and Gi
 
 ```
 GitHub Push
-    │
-    ├── GitHub Actions CI/CD
-    │   ├── Build Docker Image
-    │   ├── Push to Docker Hub
-    │   └── Deploy to EC2 via SSH
-    │
-    └── AWS EC2 (t2.medium)
-        ├── Docker
-        ├── Kind Cluster (2 nodes)
-        │   ├── Nginx Ingress Controller
-        │   └── ShopEasy App (2 replicas)
-        └── Website accessible on port 80
+    |
+    +-- GitHub Actions CI/CD
+    |   +-- Build Docker Image
+    |   +-- Push to Docker Hub
+    |   +-- Deploy to EC2 via SSH
+    |
+    +-- AWS EC2 (t2.medium)
+        +-- Docker
+        +-- Kind Cluster (2 nodes)
+        |   +-- Nginx Ingress Controller
+        |   +-- ShopEasy App (2 replicas)
+        +-- Website accessible on port 80
 ```
 
 ## Project Structure
@@ -48,6 +48,18 @@ Amazon-Clone/
 └── *.jpg *.webp               # Product images
 ```
 
+## Features
+
+- Static e-commerce frontend with 8 product listings (Indian Rupee pricing)
+- Client-side search filter and add-to-cart functionality
+- Product links redirect to real Amazon.in product pages
+- Fully containerized with Docker + Nginx
+- Kubernetes deployment with 2 replicas, health checks, and resource limits
+- Nginx Ingress for HTTP routing
+- Automated CI/CD pipeline via GitHub Actions
+- Infrastructure-as-Code with Terraform (AWS VPC, EC2, Security Group)
+- Local development via Kind (Kubernetes in Docker) with Makefile commands
+
 ## Prerequisites
 
 - [Terraform](https://www.terraform.io/downloads) >= 1.5.0
@@ -60,8 +72,8 @@ Amazon-Clone/
 ### 1. Clone and configure
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name/terraform
+git clone https://github.com/Nayannyk/Amazon-Clone.git
+cd Amazon-Clone/terraform
 cp terraform.tfvars.example terraform.tfvars
 ```
 
@@ -71,8 +83,8 @@ cp terraform.tfvars.example terraform.tfvars
 aws_region      = "ap-south-1"
 instance_type   = "t2.medium"
 volume_size     = 20
-github_token    = "ghp_xxxxxxxxxxxxxxxxxxxx"  # GitHub token with repo scope
-github_repo     = "your-username/your-repo-name"
+github_token    = "ghp_xxxxxxxxxxxxxxxxxxxx"
+github_repo     = "Nayannyk/Amazon-Clone"
 ```
 
 ### 3. Deploy infrastructure
@@ -86,11 +98,7 @@ terraform apply
 ### 4. Access the website
 
 ```bash
-# Get the URL from terraform output
 terraform output website_url
-
-# Or SSH into EC2
-ssh -i generated-key.pem ubuntu@$(terraform output -raw ec2_public_ip)
 ```
 
 ## GitHub Secrets
@@ -199,10 +207,17 @@ terraform destroy
 
 ## Tech Stack
 
-- **Infrastructure**: Terraform, AWS EC2
-- **Container Runtime**: Docker
-- **Orchestration**: Kubernetes (Kind)
-- **Ingress**: Nginx Ingress Controller
-- **CI/CD**: GitHub Actions
-- **Registry**: Docker Hub
-- **Web Server**: Nginx Alpine
+| Layer | Technology |
+|---|---|
+| Infrastructure | Terraform, AWS EC2 (t2.medium, Ubuntu 22.04) |
+| Container Runtime | Docker |
+| Orchestration | Kubernetes (Kind - 2 nodes) |
+| Ingress | Nginx Ingress Controller |
+| CI/CD | GitHub Actions |
+| Registry | Docker Hub |
+| Web Server | Nginx 1.27 Alpine |
+| Frontend | Static HTML/CSS/JS |
+
+## License
+
+Private
